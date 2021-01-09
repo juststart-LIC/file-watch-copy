@@ -4,14 +4,16 @@ function uploadFile(
   operationType,
   operationTypeFilePath,
   relativePath,
-  serverUrl
+  serverUrl,
+  watchIndex
 ) {
   operationType = operationType.toLowerCase();
   if (operationType.indexOf("dir") > -1) {
-    uploadDir(operationType, relativePath, serverUrl);
+    uploadDir(operationType, relativePath, serverUrl, watchIndex);
   } else {
     let form = new FormData();
     form.append("fileType", "file");
+    form.append("watchIndex", watchIndex);
     form.append("operationType", operationType);
     form.append("operationTypeFilePath", relativePath);
     if (fs.existsSync(operationTypeFilePath)) {
@@ -26,9 +28,15 @@ function uploadFile(
     form.submit(serverUrl);
   }
 }
-function uploadDir(operationType, operationTypeFilePath, serverUrl) {
+function uploadDir(
+  operationType,
+  operationTypeFilePath,
+  serverUrl,
+  watchIndex
+) {
   let form = new FormData();
   form.append("fileType", "dir");
+  form.append("watchIndex", watchIndex);
   form.append("operationType", operationType);
   form.append("operationTypeFilePath", operationTypeFilePath);
   form.append("operationTypeFileStream", "");

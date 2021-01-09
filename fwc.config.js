@@ -1,11 +1,21 @@
 module.exports = {
   mode: "client-server",
-  serverUrl: "",
+  // 服务器地址
+  serverUrls: [
+    {
+      serverUrl: ""
+    }
+  ],
+  // 监听的文件
   watchFile: [
     {
-      // 当前只支持1对1同步
       path: ""
     }
   ],
-  fileSavePath: ""
+  // 服务器保存位置
+  fileSavePath: [
+    {
+      path: ""
+    }
+  ]
 };

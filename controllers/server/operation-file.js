@@ -1,18 +1,20 @@
 const fwcConfig = require("../../fwc.config");
 const fsExtra = require("fs-extra");
 const fs = require("fs");
-const saveFilePath = fwcConfig.fileSavePath;
+const fileSavePath = fwcConfig.fileSavePath;
 function operationFile(fileData) {
-  console.log(fileData);
   const {
     fileType,
     operationType,
     operationTypeFilePath,
-    operationTypeFileStream
+    operationTypeFileStream,
+    watchIndex
   } = fileData;
   if (!fileData) {
     return;
   }
+  let fileIndex = parseInt(watchIndex);
+  let saveFilePath = fileSavePath[fileIndex].path;
   const FilePath = saveFilePath + "/" + operationTypeFilePath;
   if (fileType == "dir" && operationType == "adddir") {
     createDir(FilePath);
