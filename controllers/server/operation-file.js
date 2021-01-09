@@ -3,7 +3,7 @@ const fsExtra = require("fs-extra");
 const fs = require("fs");
 const fileSavePath = fwcConfig.fileSavePath;
 function operationFile(fileData) {
-  const {
+  let {
     fileType,
     operationType,
     operationTypeFilePath,
@@ -28,6 +28,7 @@ function operationFile(fileData) {
     fileType == "file" &&
     (operationType == "add" || operationType == "change")
   ) {
+    operationTypeFileStream = operationTypeFileStream;
     createFile(FilePath, operationTypeFileStream);
   }
 
@@ -40,6 +41,13 @@ function createDir(operationTypeFilePath) {
 }
 
 function createFile(operationTypeFilePath, operationTypeFileStream) {
+  // 将json化数据转成buffer，参考http://nodejs.cn/api/buffer/buf_tojson.html
+  operationTypeFileStream = JSON.parse(
+    operationTypeFileStream,
+    (key, value) => {
+      return value && value.type == "Buffer" ? Buffer.from(value) : value;
+    }
+  );
   fs.writeFile(operationTypeFilePath, operationTypeFileStream, () => {});
 }
 

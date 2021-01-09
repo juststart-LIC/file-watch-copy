@@ -4,17 +4,18 @@ const path = require("path");
 const watchFilePaths = wfConfig.watchFile ? wfConfig.watchFile : [];
 const serverUrls = wfConfig.serverUrls ? wfConfig.serverUrls : [];
 const uploadFile = require("./upload-file");
+const removeSlashReg = /\\{1}/g;
 let watcher = chokidar.watch();
 function initWatchFile() {
   watchFilePaths.forEach(filePath => {
     //兼容win
-    filePath = filePath.path.replace(/\\{1}/g, "/");
+    filePath = filePath.path.replace(removeSlashReg, "/");
     watcher.add(filePath);
   });
   watcher.on("all", (operationType, operationTypeFilePath) => {
     let watchIndex = 0,
       CommonOperationTypeFilePath = operationTypeFilePath.replace(
-        /\\{1}/g,
+        removeSlashReg,
         "/"
       );
     wfConfig.watchFile.forEach(filepath => {

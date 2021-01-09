@@ -17,15 +17,22 @@ function uploadFile(
     form.append("operationType", operationType);
     form.append("operationTypeFilePath", relativePath);
     if (fs.existsSync(operationTypeFilePath)) {
-      form.append(
-        "operationTypeFileStream",
-        fs.readFileSync(operationTypeFilePath)
-      );
+      let rs = fs.createReadStream(operationTypeFilePath),
+        uploadStream = [];
+      rs.on("data", function (chunk) {
+        uploadStream.push(chunk);
+      });
+      rs.on("end", function () {
+        uploadStream = Buffer.concat(uploadStream);
+        // 需要json化缓冲区，不然数据上传时会自动转换成utf-8数据类型
+        uploadStream = JSON.stringify(uploadStream);
+        form.append("operationTypeFileStream", uploadStream);
+        form.submit(serverUrl);
+      });
     } else {
       form.append("operationTypeFileStream", "");
+      form.submit(serverUrl);
     }
-
-    form.submit(serverUrl);
   }
 }
 function uploadDir(
